@@ -1,0 +1,38 @@
+{
+  "name": "playwright-pom-framework",
+  "version": "1.0.0",
+  "description": "Playwright Test Framework with Page Object Model pattern using TypeScript",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:chrome": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:fiber": "playwright test src/tests/fiber-buyflow.spec.ts",
+    "test:fiber:full": "playwright test src/tests/fiber-buyflow.spec.ts --grep 'complete full fiber internet purchase flow'",
+    "test:fiber:address": "playwright test src/tests/fiber-buyflow.spec.ts --grep 'validate address qualification'",
+    "test:fiber:speed": "playwright test src/tests/fiber-buyflow.spec.ts --grep 'validate speed selection'",
+    "test:fiber:contact": "playwright test src/tests/fiber-buyflow.spec.ts --grep 'validate contact information'",
+    "test:report": "playwright show-report",
+    "codegen": "playwright codegen"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "pom",
+    "testing",
+    "automation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}
