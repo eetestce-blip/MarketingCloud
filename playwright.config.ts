@@ -12,7 +12,9 @@ export default defineConfig({
     timeout: 60000, // 30 seconds for expect assertions
   },
   use: {
-    baseURL: 'https://storefront:QFCC2021@bgtm-035.dx.commercecloud.salesforce.com',
+    baseURL: 'https://ctl-fiber--test2.sandbox.my.salesforce.com',
+    storageState: 'sf-profile/auth.json', // ✅ reuse session
+    headless: false, // Run in headed mode for better visibility during development
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -20,8 +22,24 @@ export default defineConfig({
     navigationTimeout: 120000, // 2 minutes for page navigation
     actionTimeout: 60000, // 30 seconds for actions
   },
-
+     
   projects: [
+
+    
+    {
+      name: 'setup',
+      testMatch: /auth\.setup\.spec\.ts/,
+    },
+    {
+      name: 'tests',
+      testIgnore: /auth\.setup\.spec\.ts/,
+      use: {
+        storageState: 'sf-profile/auth.json', // ✅ only applied to real tests
+      },
+      dependencies: ['setup'], // ✅ runs setup first
+    },
+  
+
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
@@ -54,4 +72,5 @@ export default defineConfig({
   //   url: 'http://127.0.0.1:3000',
   //   reuseExistingServer: !process.env.CI,
   // },
+ 
 });

@@ -15,7 +15,7 @@ export class PaymentPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.creditCardButton = page.locator('//a[@id="pay"]');
+    this.creditCardButton = page.locator('//*[@id="pay"]');
     this.creditCardAgreeCheckbox = page.locator('label[for*="ACHOptOutCheckbox"]');
     this.paymentIframe = page.locator('iframe[id*="z_hppm_iframe"]');
     this.successMessage = page.locator('//*[contains(text(), "Thanks for choosing Quantum Fiber")]');
@@ -26,7 +26,8 @@ export class PaymentPage extends BasePage {
    * Select credit card payment method
    */
   async selectCreditCard(): Promise<void> {
-    await this.click(this.creditCardButton);
+    await this.page.waitForSelector('#pay');
+    await this.page.locator('#pay').click(); 
   }
 
   /**

@@ -51,7 +51,8 @@ export class InstallationPage extends BasePage {
   async continue(): Promise<void> {
     await this.click(this.continueButton);
     await this.waitForPageLoad();
-  }
+  
+    }
 
   /**
    * Get SA date text

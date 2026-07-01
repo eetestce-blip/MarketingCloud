@@ -2,30 +2,57 @@
  * Fiber Internet Buy Flow Test Data and Utilities
  */
 
-export const fiberTestData = {
-  // Address qualification
-  testAddress: '5211 W 4TH AVE,LAKEWOOD,CO 80226,USA',
-  unit: 'UNIT B',
+import { getFiberTestCaseByScenario, getFiberTestCaseById, getFiberTestCases, type FiberTestCase } from './excelDataReader';
+import { globalProperties } from '@config/globalProperties';
 
-  // Speed selection
-  selectedSpeed: '500 mbps',
-  expectedPrice: '50',
+/**
+ * Get test data by Test Case ID or scenario name
+ * Priority: Environment variable TEST_CASE_ID > Fallback to first test case
+ */
+export function getFiberTestData(): FiberTestCase {
+  const testCaseId = process.env.TEST_CASE_ID || process.env.FIBER_TEST_CASE_ID;
+  const scenario = process.env.FIBER_SCENARIO;
 
-  // Contact information
-  email: 'accelqauto+06052026195011X@Mailinator.com',
-  mobile: '9633574116',
+  let excelData: FiberTestCase | undefined;
 
-  // Account information
-  firstName: 'KelseyAIXsJ',
-  lastName: 'roDUONeelamDoNotUse',
+  // Priority: Test Case ID from environment variable
+  if (testCaseId) {
+    excelData = getFiberTestCaseById(testCaseId);
+    if (!excelData) {
+      throw new Error(
+        `Test Case ID "${testCaseId}" not found in Excel file. ` +
+        `Available Test Case IDs: ${getFiberTestCases().map(tc => tc.TestCaseId).join(', ')}`
+      );
+    }
+  }
+  // Fallback: Scenario name
+  else if (scenario) {
+    excelData = getFiberTestCaseByScenario(scenario);
+    if (!excelData) {
+      throw new Error(
+        `Scenario "${scenario}" not found in Excel file. ` +
+        `Available scenarios: ${getFiberTestCases().map(tc => tc.Scenario).join(', ')}`
+      );
+    }
+  }
+  // Fallback: First test case
+  else {
+    excelData = getFiberTestCases()[0];
+  }
 
-  // Payment information
-  creditCardNumber: '5454 5454 5454 5454',
-  CVV: '234',
+  // Merge Excel data with global properties to ensure URLs and credentials are always current
+  return {
+    ...excelData,
+    StorefrontUrl: globalProperties.storefront.url,
+    SalesforceUrl: globalProperties.salesforce.url,
+    MailinatorUrl: globalProperties.mailinator.url,
+    SalesforceUsername: globalProperties.salesforce.username,
+    SalesforcePassword: globalProperties.salesforce.password,
+    OTPSecret: globalProperties.salesforce.otpSecret,
+  };
+}
 
-  // URLs
-  storefrontUrl: 'https://storefront:QFCC2021@bgtm-035.dx.commercecloud.salesforce.com/on/demandware.store/Sites-QFCC-Site/default/AddressChecker-Show'
-};
+export const fiberTestData: FiberTestCase = getFiberTestData();
 
 /**
  * Generate unique email for testing
